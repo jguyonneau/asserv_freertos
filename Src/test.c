@@ -8,9 +8,6 @@
 #include "gpio.h"
 #include <stdio.h>
 
-char bufferRx[256];
-char buffer[10];
-int c2='A';
 void start_io_task(void const * argument)
 {
 	/* init code for LWIP */
@@ -22,13 +19,9 @@ void start_io_task(void const * argument)
 	/* Infinite loop */
 	for (;;)
 	{
-//		int nb;
-//		scanf("%d", &nb);
-//		printf("nb = %d\n", nb);
-
-			int c=getchar();
-//		printf("C = %c\n", c2);
-		osDelay(1000);
+		int nb;
+		scanf("%d", &nb);
+		printf("%d\n", nb);
 	}
 	/* USER CODE END start_io_task */
 }
@@ -41,9 +34,8 @@ void start_asserv_task(void const * argument)
 	for (;;)
 	{
 //		printf("#");
-		c2++;
 		HAL_GPIO_TogglePin(LEDB_GPIO_Port, LEDB_Pin);
-		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(1000));
+		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(8));
 	}
 }
 
@@ -54,8 +46,6 @@ void start_background_task(void const * argument)
 	for (;;)
 	{
 		HAL_GPIO_TogglePin(LEDG_GPIO_Port, LEDG_Pin);
-//		printf("b.a.c.k\n");
-		osDelay(1000);
 	}
 }
 

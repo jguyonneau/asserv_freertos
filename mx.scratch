@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-<ProjectName>/home/cheff/robotik/test_freeRtOs/\test_freeRtOs</ProjectName>
+<ProjectName>/home/cheff/robotik/asserv_freertos/\test_freeRtOs</ProjectName>
 <ProjectNature>C</ProjectNature> 
 <CMSIS>Drivers/CMSIS</CMSIS>
 <HAL_Driver>/home/cheff/STM32Cube/Repository//STM32Cube_FW_F7_V1.11.0/Drivers/CMSIS</HAL_Driver>
@@ -417,6 +417,10 @@
                                 </file>
 
                                 <file>
+                                 <name>Src/dma.c</name>
+                                </file>
+
+                                <file>
                                  <name>Src/freertos.c</name>
                                 </file>
 
@@ -461,27 +465,9 @@
     <group>
         <name>Src</name>
                     <group>
-                    <name>stm32f7xx_hal_timebase_TIM.c</name>
+                    <name>dma.c</name>
                                     <file>
-                                            <name>Src/stm32f7xx_hal_timebase_TIM.c</name>
-                                    </file>
-                    </group>
-    </group>
-    <group>
-        <name>Src</name>
-                    <group>
-                    <name>usb_otg.c</name>
-                                    <file>
-                                            <name>Src/usb_otg.c</name>
-                                    </file>
-                    </group>
-    </group>
-    <group>
-        <name>Src</name>
-                    <group>
-                    <name>main.c</name>
-                                    <file>
-                                            <name>Src/main.c</name>
+                                            <name>Src/dma.c</name>
                                     </file>
                     </group>
     </group>
@@ -500,24 +486,6 @@
                     <name>usart.c</name>
                                     <file>
                                             <name>Src/usart.c</name>
-                                    </file>
-                    </group>
-    </group>
-    <group>
-        <name>Src</name>
-                    <group>
-                    <name>ethernetif.c</name>
-                                    <file>
-                                            <name>Src/ethernetif.c</name>
-                                    </file>
-                    </group>
-    </group>
-    <group>
-        <name>Src</name>
-                    <group>
-                    <name>stm32f7xx_hal_msp.c</name>
-                                    <file>
-                                            <name>Src/stm32f7xx_hal_msp.c</name>
                                     </file>
                     </group>
     </group>
@@ -545,6 +513,51 @@
                     <name>gpio.c</name>
                                     <file>
                                             <name>Src/gpio.c</name>
+                                    </file>
+                    </group>
+    </group>
+    <group>
+        <name>Src</name>
+                    <group>
+                    <name>stm32f7xx_hal_timebase_TIM.c</name>
+                                    <file>
+                                            <name>Src/stm32f7xx_hal_timebase_TIM.c</name>
+                                    </file>
+                    </group>
+    </group>
+    <group>
+        <name>Src</name>
+                    <group>
+                    <name>usb_otg.c</name>
+                                    <file>
+                                            <name>Src/usb_otg.c</name>
+                                    </file>
+                    </group>
+    </group>
+    <group>
+        <name>Src</name>
+                    <group>
+                    <name>main.c</name>
+                                    <file>
+                                            <name>Src/main.c</name>
+                                    </file>
+                    </group>
+    </group>
+    <group>
+        <name>Src</name>
+                    <group>
+                    <name>ethernetif.c</name>
+                                    <file>
+                                            <name>Src/ethernetif.c</name>
+                                    </file>
+                    </group>
+    </group>
+    <group>
+        <name>Src</name>
+                    <group>
+                    <name>stm32f7xx_hal_msp.c</name>
+                                    <file>
+                                            <name>Src/stm32f7xx_hal_msp.c</name>
                                     </file>
                     </group>
     </group>
