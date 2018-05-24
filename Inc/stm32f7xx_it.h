@@ -52,6 +52,7 @@ void DMA1_Stream1_IRQHandler(void);
 void TIM1_TRG_COM_TIM11_IRQHandler(void);
 void USART3_IRQHandler(void);
 void ETH_IRQHandler(void);
+void ETH_WKUP_IRQHandler(void);
 
 #ifdef __cplusplus
 }

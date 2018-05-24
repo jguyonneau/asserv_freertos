@@ -7,11 +7,17 @@
 #include "usb_otg.h"
 #include "gpio.h"
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h> //exit(0);
+#include <lwip/sockets.h>
+#include "udp.h"
+
+
 
 void start_io_task(void const * argument)
 {
+	printf("start_io_task\n");
 	/* init code for LWIP */
-	MX_LWIP_Init();
 	setvbuf(stdin, NULL, _IONBF, 0);
 	HAL_GPIO_TogglePin(LEDR_GPIO_Port, LEDR_Pin);
 
@@ -29,7 +35,7 @@ void start_io_task(void const * argument)
 /* start_asserv_task function */
 void start_asserv_task(void const * argument)
 {
-
+	printf("start_asserv_task\n");
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 	for (;;)
 	{
@@ -42,10 +48,31 @@ void start_asserv_task(void const * argument)
 /* start_background_task function */
 void start_background_task(void const * argument)
 {
+	MX_LWIP_Init();
+	printf("start_background_task\n");
 
+	int s;
+	unsigned short port;
+	struct sockaddr_in server;
+	memset(&server, 0, sizeof(server));
+	if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+		printf("socket failed..\n");
+
+	/* Set up the server name */
+	server.sin_family      = AF_INET;            /* Internet Domain    */
+	server.sin_port        = htons(2222);               /* Server Port        */
+	server.sin_addr.s_addr = inet_addr("192.168.10.1"); /* Server's Address   */
+
+
+    char buf[5] = "AAA";
 	for (;;)
 	{
-		HAL_GPIO_TogglePin(LEDG_GPIO_Port, LEDG_Pin);
+		  if (sendto(s, buf, (strlen(buf)+1), 0,
+		                 (struct sockaddr *)&server, sizeof(server)) < 0)
+			  printf("sendto failed\n");
+//		  printf("sendto OK\n");
+
+		HAL_Delay(1000);
 	}
 }
 

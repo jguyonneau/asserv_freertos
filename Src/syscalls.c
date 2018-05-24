@@ -173,7 +173,8 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 
 int _write(int file, char *ptr, int len)
 {
-	HAL_UART_Transmit_IT(&huart3, (uint8_t*)ptr, len);
+	 // TODO : remettre un envoie non synchrone -> via DMA?
+	HAL_UART_Transmit(&huart3, (uint8_t*)ptr, len, HAL_MAX_DELAY);
 	return 0;
 }
 
