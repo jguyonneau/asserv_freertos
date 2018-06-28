@@ -57,20 +57,10 @@
 
 /* Variables -----------------------------------------------------------------*/
 osThreadId idleHandle;
-uint32_t idleBuffer[ 128 ];
-osStaticThreadDef_t idleControlBlock;
 osThreadId asserv_taskHandle;
-uint32_t asserv_taskBuffer[ 512 ];
-osStaticThreadDef_t asserv_taskControlBlock;
 osThreadId background_taskHandle;
-uint32_t background_taskBuffer[ 512 ];
-osStaticThreadDef_t background_taskControlBlock;
 osThreadId io_taskHandle;
-uint32_t io_taskBuffer[ 1024 ];
-osStaticThreadDef_t io_taskControlBlock;
 osMessageQId RxUartQueueHandle;
-uint8_t RxUartQueueBuffer[ 1 * sizeof( uint16_t ) ];
-osStaticMessageQDef_t RxUartQueueControlBlock;
 
 /* USER CODE BEGIN Variables */
 
@@ -89,23 +79,18 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* USER CODE END FunctionPrototypes */
 
-/* GetIdleTaskMemory prototype (linked to static allocation support) */
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize );
-
 /* Hook prototypes */
+void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTaskName);
 
-/* USER CODE BEGIN GET_IDLE_TASK_MEMORY */
-static StaticTask_t xIdleTaskTCBBuffer;
-static StackType_t xIdleStack[configMINIMAL_STACK_SIZE];
-  
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize )
+/* USER CODE BEGIN 4 */
+__attribute__((weak)) void vApplicationStackOverflowHook(xTaskHandle xTask, signed char *pcTaskName)
 {
-  *ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
-  *ppxIdleTaskStackBuffer = &xIdleStack[0];
-  *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
-  /* place for user code */
-}                   
-/* USER CODE END GET_IDLE_TASK_MEMORY */
+	printf("Stack overflow in task %s \n", pcTaskName);
+   /* Run time stack overflow checking is performed if
+   configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2. This hook function is
+   called if a stack overflow is detected. */
+}
+/* USER CODE END 4 */
 
 /* Init FreeRTOS */
 
@@ -128,19 +113,19 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of idle */
-  osThreadStaticDef(idle, idle_start, osPriorityIdle, 0, 128, idleBuffer, &idleControlBlock);
+  osThreadDef(idle, idle_start, osPriorityIdle, 0, 512);
   idleHandle = osThreadCreate(osThread(idle), NULL);
 
   /* definition and creation of asserv_task */
-  osThreadStaticDef(asserv_task, start_asserv_task, osPriorityRealtime, 0, 512, asserv_taskBuffer, &asserv_taskControlBlock);
+  osThreadDef(asserv_task, start_asserv_task, osPriorityRealtime, 0, 512);
   asserv_taskHandle = osThreadCreate(osThread(asserv_task), NULL);
 
   /* definition and creation of background_task */
-  osThreadStaticDef(background_task, start_background_task, osPriorityLow, 0, 512, background_taskBuffer, &background_taskControlBlock);
+  osThreadDef(background_task, start_background_task, osPriorityLow, 0, 512);
   background_taskHandle = osThreadCreate(osThread(background_task), NULL);
 
   /* definition and creation of io_task */
-  osThreadStaticDef(io_task, start_io_task, osPriorityAboveNormal, 0, 1024, io_taskBuffer, &io_taskControlBlock);
+  osThreadDef(io_task, start_io_task, osPriorityAboveNormal, 0, 512);
   io_taskHandle = osThreadCreate(osThread(io_task), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -149,7 +134,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the queue(s) */
   /* definition and creation of RxUartQueue */
-  osMessageQStaticDef(RxUartQueue, 1, uint16_t, RxUartQueueBuffer, &RxUartQueueControlBlock);
+  osMessageQDef(RxUartQueue, 1, uint16_t);
   RxUartQueueHandle = osMessageCreate(osMessageQ(RxUartQueue), NULL);
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -161,7 +146,7 @@ void MX_FREERTOS_Init(void) {
 void idle_start(void const * argument)
 {
   /* init code for LWIP */
-  MX_LWIP_Init();
+//  MX_LWIP_Init();
 
   /* USER CODE BEGIN idle_start */
   /* Infinite loop */

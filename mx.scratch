@@ -85,7 +85,7 @@
                     <group>
                             <name>FreeRTOS</name>
                                             <file>
-                                                    <name>Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c</name>
+                                                    <name>Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_3.c</name>
                                             </file>
                                             <file>
                                                     <name>Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM7/r0p1/port.c</name>

@@ -68,24 +68,20 @@ void start_background_task(void const * argument)
 //	server.sin_addr.s_addr = inet_addr("192.168.10.1"); /* Server's Address   */
 	server.sin_addr.s_addr = htonl(INADDR_ANY);
 
-	printf("ANY ADDR %x   inet_addr(192.168.10.1) %x  inet_addr(192.168.10.2) %x \n",htonl(INADDR_ANY), inet_addr("192.168.10.1"), inet_addr("192.168.10.2") );
 
-	printf("####################################\n");
 	if (bind(s, &server, sizeof(server))==-1)
 		printf("bind failed..\n");
-	printf("####################################\n");
-
-    char buf[5] = "AAA";
+    char buf[5];
 	for (;;)
 	{
-//		  if (sendto(s, buf, (strlen(buf)+1), 0,
-//		                 (struct sockaddr *)&server, sizeof(server)) < 0)
-//			  printf("sendto failed\n");
-//		  printf("sendto OK\n");
-
-		 if (recvfrom(s, buf, 5, 0, &si_other, &slen)==-1)
+		 if (recvfrom(s, buf, 4, 0, &si_other, &slen)==-1)
 			  printf("recvfrom failed\n");
-		 printf("Recv %s\n", buf);
+		 buf[4] = 0;
+		 printf("Recv '%s'\n", buf);
+
+		 if (sendto(s, buf, (strlen(buf)), 0, (struct sockaddr *)&si_other, sizeof(si_other)) < 0)
+			 printf("sendto failed\n");
+
 		 HAL_Delay(1000);
 	}
 }

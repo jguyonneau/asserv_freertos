@@ -312,6 +312,7 @@ do_memp_malloc_pool_fn(const struct memp_desc *desc, const char* file, const int
     memp_overflow_check_element_overflow(memp, desc);
     memp_overflow_check_element_underflow(memp, desc);
 #endif /* MEMP_OVERFLOW_CHECK */
+
     *desc->tab = memp->next;
 #if MEMP_OVERFLOW_CHECK
     memp->next = NULL;
@@ -434,10 +435,6 @@ do_memp_free_pool(const struct memp_desc* desc, void *mem)
   *desc->tab = memp;
 
 #if MEMP_SANITY_CHECK
-  if( !memp_sanity(desc))
-  {
-	  printf("Shits!\n");
-  }
   LWIP_ASSERT("memp sanity", memp_sanity(desc));
 #endif /* MEMP_SANITY_CHECK */
 

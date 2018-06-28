@@ -266,7 +266,7 @@
  *      memp_malloc() or memp_free() is called (useful but slow!)
  */
 #if !defined MEMP_OVERFLOW_CHECK || defined __DOXYGEN__
-#define MEMP_OVERFLOW_CHECK             1
+#define MEMP_OVERFLOW_CHECK             0
 #endif
 
 /**
@@ -274,7 +274,7 @@
  * sure that there are no cycles in the linked lists.
  */
 #if !defined MEMP_SANITY_CHECK || defined __DOXYGEN__
-#define MEMP_SANITY_CHECK               1
+#define MEMP_SANITY_CHECK               0
 #endif
 
 /**
@@ -292,7 +292,7 @@
  * bigger pool - WARNING: THIS MIGHT WASTE MEMORY but it can make a system more
  * reliable. */
 #if !defined MEM_USE_POOLS_TRY_BIGGER_POOL || defined __DOXYGEN__
-#define MEM_USE_POOLS_TRY_BIGGER_POOL   1
+#define MEM_USE_POOLS_TRY_BIGGER_POOL   0
 #endif
 
 /**

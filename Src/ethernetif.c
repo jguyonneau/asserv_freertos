@@ -220,8 +220,6 @@ void HAL_ETH_MspDeInit(ETH_HandleTypeDef* ethHandle)
   */
 void HAL_ETH_RxCpltCallback(ETH_HandleTypeDef *heth)
 {
-	printf("osSemaphoreRelease(s_xSemaphore);\n");
-
   osSemaphoreRelease(s_xSemaphore);
 }
 
@@ -239,8 +237,6 @@ void HAL_ETH_RxCpltCallback(ETH_HandleTypeDef *heth)
  * @param netif the already initialized lwip network interface structure
  *        for this ethernetif
  */
-uint32_t eth_taskBuffer[ INTERFACE_THREAD_STACK_SIZE ];
-osStaticThreadDef_t eth_taskControlBlock;
 static void low_level_init(struct netif *netif)
 { 
   uint32_t regvalue = 0;
@@ -308,19 +304,9 @@ static void low_level_init(struct netif *netif)
   osSemaphoreDef(SEM);
   s_xSemaphore = osSemaphoreCreate(osSemaphore(SEM) , 1 );
 
-  if(s_xSemaphore == NULL)
-	  printf("Failed to create s_xSemaphore !\n");
-
-
-  /* create the task that handles the ETH_MAC */
-  //  osThreadDef(EthIf, ethernetif_input, osPriorityRealtime, 0, INTERFACE_THREAD_STACK_SIZE);
-  //  osThreadCreate (osThread(EthIf), netif);
-
-    osThreadStaticDef(EthIf, ethernetif_input, osPriorityBelowNormal, 0, INTERFACE_THREAD_STACK_SIZE, eth_taskBuffer, &eth_taskControlBlock);
-    osThreadId handle = osThreadCreate (osThread(EthIf), netif);
-    if( handle == NULL )
-  	  printf("low_level_init osThreadCreate failed for ethernet !\n");
-
+/* create the task that handles the ETH_MAC */
+  osThreadDef(EthIf, ethernetif_input, osPriorityRealtime, 0, INTERFACE_THREAD_STACK_SIZE);
+  osThreadCreate (osThread(EthIf), netif);
   /* Enable MAC and DMA transmission and reception */
   HAL_ETH_Start(&heth);
 
@@ -544,15 +530,12 @@ void ethernetif_input( void const * argument )
   struct pbuf *p;
   struct netif *netif = (struct netif *) argument;
   
-  printf("ethernetif_input\n");
   for( ;; )
   {
     if (osSemaphoreWait( s_xSemaphore, TIME_WAITING_FOR_INPUT)==osOK)
     {
       do
-      {
-//    	  	asm volatile ("cpsid i");
-
+      {   
         p = low_level_input( netif );
         if   (p != NULL)
         {
