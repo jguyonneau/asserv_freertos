@@ -44,7 +44,7 @@ void start_asserv_task(void const * argument)
 		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(8));
 	}
 }
-
+unsigned int *ptr = (unsigned int*)0x20aa8c0;
 /* start_background_task function */
 void start_background_task(void const * argument)
 {
@@ -52,27 +52,41 @@ void start_background_task(void const * argument)
 	printf("start_background_task\n");
 
 	int s;
+//	asm volatile ("cpsid i");
+
 	unsigned short port;
-	struct sockaddr_in server;
+	struct sockaddr_in server, si_other;
+	long unsigned int slen=sizeof(si_other);
 	memset(&server, 0, sizeof(server));
-	if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+
+	if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
 		printf("socket failed..\n");
 
 	/* Set up the server name */
 	server.sin_family      = AF_INET;            /* Internet Domain    */
-	server.sin_port        = htons(2222);               /* Server Port        */
-	server.sin_addr.s_addr = inet_addr("192.168.10.1"); /* Server's Address   */
+	server.sin_port        = htons(6666);               /* Server Port        */
+//	server.sin_addr.s_addr = inet_addr("192.168.10.1"); /* Server's Address   */
+	server.sin_addr.s_addr = htonl(INADDR_ANY);
 
+	printf("ANY ADDR %x   inet_addr(192.168.10.1) %x  inet_addr(192.168.10.2) %x \n",htonl(INADDR_ANY), inet_addr("192.168.10.1"), inet_addr("192.168.10.2") );
+
+	printf("####################################\n");
+	if (bind(s, &server, sizeof(server))==-1)
+		printf("bind failed..\n");
+	printf("####################################\n");
 
     char buf[5] = "AAA";
 	for (;;)
 	{
-		  if (sendto(s, buf, (strlen(buf)+1), 0,
-		                 (struct sockaddr *)&server, sizeof(server)) < 0)
-			  printf("sendto failed\n");
+//		  if (sendto(s, buf, (strlen(buf)+1), 0,
+//		                 (struct sockaddr *)&server, sizeof(server)) < 0)
+//			  printf("sendto failed\n");
 //		  printf("sendto OK\n");
 
-		HAL_Delay(1000);
+		 if (recvfrom(s, buf, 5, 0, &si_other, &slen)==-1)
+			  printf("recvfrom failed\n");
+		 printf("Recv %s\n", buf);
+		 HAL_Delay(1000);
 	}
 }
 
