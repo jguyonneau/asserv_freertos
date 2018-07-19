@@ -11,6 +11,8 @@
 #include <stdlib.h> //exit(0);
 #include <lwip/sockets.h>
 #include "udp.h"
+#include "tim.h"
+
 
 
 
@@ -37,11 +39,21 @@ void start_asserv_task(void const * argument)
 {
 	printf("start_asserv_task\n");
 	TickType_t xLastWakeTime = xTaskGetTickCount();
+	int32_t global = 0;
+	int div = 0;
+
+	HAL_TIM_Encoder_Start(&htim1,TIM_CHANNEL_ALL);
 	for (;;)
 	{
-//		printf("#");
+		int8_t count = __HAL_TIM_GetCounter(&htim1);
+		__HAL_TIM_SetCounter(&htim1, 0);
+
+		global+= count;
+		if(++div % 10)
+			printf("Cnt %d\n",global);
+//		__HAL_TIM_ResetICPrescalerValue(&htim1,TIM_CHANNEL_ALL);
 		HAL_GPIO_TogglePin(LEDB_GPIO_Port, LEDB_Pin);
-		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(8));
+		vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10));
 	}
 }
 unsigned int *ptr = (unsigned int*)0x20aa8c0;
