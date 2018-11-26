@@ -2,3 +2,7 @@ liens utiles:
 
 Configurer USB storage :
 http://evenlund.blogspot.com/2016/10/usb-storage-with-stm32f4-discovery-and_58.html
+
+Encoder quadrature:
+http://elastic-notes.blogspot.com/p/cubemx-stm32-encoder-interface.html
+https://www.enib.fr/~kerhoas/ROBOT_/code.txt/quadEncoder.c ?
